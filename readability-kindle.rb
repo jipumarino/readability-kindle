@@ -5,7 +5,7 @@ require 'json'
 require 'uri'
 require 'logger'
 
-logger = Logger.new('hola.log')
+logger = Logger.new('readability-kindle.log')
 
 logger.info 'Parsing config file'
 config = JSON.parse(File.read(File.join(File.dirname(__FILE__), 'config.json')))
