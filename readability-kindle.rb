@@ -2,7 +2,6 @@
 
 require 'mechanize'
 require 'json'
-require 'uri'
 require 'logger'
 
 logger = Logger.new('readability-kindle.log')
