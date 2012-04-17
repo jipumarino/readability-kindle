@@ -52,5 +52,5 @@ get '/' do
   @agent ||= Mechanize.new
   try_to_login
   processed_articles = process_articles.to_s
-  '<html><head><title>→K</title><link rel="shortcut icon" href="favicon.ico"></head><body><div style="font-family:sans-serif;">'+processed_articles+' artículos procesados</div></body></html>'
+  '<html><head><title>→K</title><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="shortcut icon" href="favicon.ico"></head><body><div style="font-family:sans-serif;">'+processed_articles+' artículos procesados</div></body></html>'
 end
