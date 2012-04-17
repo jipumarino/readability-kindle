@@ -52,5 +52,18 @@ get '/' do
   @agent ||= Mechanize.new
   try_to_login
   processed_articles = process_articles.to_s
-  '<html><head><title>→K</title><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="shortcut icon" href="favicon.ico"></head><body><div style="font-family:sans-serif;">'+processed_articles+' artículos procesados</div></body></html>'
+  <<-HTML
+    <html>
+      <head>
+        <title>→K</title>
+        <link rel="apple-touch-icon" href="/readability-kindle/apple-touch-icon.png" />
+        <link rel="shortcut icon" href="favicon.ico">
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+      </head>
+      <body>
+        <div style="font-family:sans-serif;font-size:50px">#{processed_articles} artículos procesados</div>
+      </body>
+    </html>
+  HTML  
 end
