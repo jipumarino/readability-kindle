@@ -51,6 +51,6 @@ get '/' do
   @config ||= JSON.parse(File.read(File.join(File.dirname(__FILE__), 'config.json')))
   @agent ||= Mechanize.new
   try_to_login
-  processed_articles = process_articles
-  '<html><head><link rel="shortcut icon" href="favicon.ico"></head><body><div style="font-family:sans-serif;">'+processed_articles+'artículos procesados</div></body></html>'
+  processed_articles = process_articles.to_s
+  '<html><head><link rel="shortcut icon" href="favicon.ico"></head><body><div style="font-family:sans-serif;">'+processed_articles+' artículos procesados</div></body></html>'
 end
