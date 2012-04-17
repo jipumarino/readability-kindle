@@ -4,10 +4,7 @@ require 'mechanize'
 require 'nokogiri'
 require 'json'
 require 'logger'
-
-@logger = Logger.new('readability-kindle.log')
-@config = JSON.parse(File.read(File.join(File.dirname(__FILE__), 'config.json')))
-@agent = Mechanize.new
+require 'sinatra'
 
 def readability_url
   "http://www.readability.com/#{@config['readability']['username']}/"
@@ -20,6 +17,10 @@ end
 
 def archive_article(id)
   @agent.get "http://www.readability.com/articles/#{id}/ajax/archive"
+end
+
+def favorite_article(id)
+  @agent.get "http://www.readability.com/articles/#{id}/ajax/favorite"
 end
 
 def process_articles
@@ -38,6 +39,7 @@ def process_articles
   articles_ids.each do |article_id|
     deliver_article article_id
     archive_article article_id
+    favorite_article article_id
   end
 
   return true
@@ -51,10 +53,11 @@ def try_to_login
   login_page.form.submit
 end
 
-def main_loop
-  @logger.info "Sleeping"
-  sleep 60
-  try_to_login if not process_articles
+get '/' do
+  @logger ||= Logger.new('readability-kindle.log')
+  @config ||= JSON.parse(File.read(File.join(File.dirname(__FILE__), 'config.json')))
+  @agent ||= Mechanize.new
+  try_to_login
+  process_articles
+  '<div style="font-family:sans-serif;">Artículos procesados</div>'
 end
-
-main_loop while true
