@@ -3,7 +3,6 @@
 require 'mechanize'
 require 'nokogiri'
 require 'json'
-require 'logger'
 require 'sinatra'
 
 def readability_url
@@ -11,7 +10,6 @@ def readability_url
 end
 
 def deliver_article(id)
-  @logger.info "Delivering article #{id}"
   @agent.post "http://www.readability.com/api/kindle/v1/generator", "id" => id, "email" => @config["kindle"]["email_address"]
 end
 
@@ -24,7 +22,6 @@ def favorite_article(id)
 end
 
 def process_articles
-  @logger.info "Processing articles"
   response = @agent.get readability_url
   return false if response.forms.size > 1
 
@@ -33,8 +30,6 @@ def process_articles
   articles_ids = doc.css('#rdb-reading-list a.list-article-title').map do |a|
     a['href'].match(/[^\/]+$/).to_s
   end
-
-  @logger.info "Nothing to deliver" if articles_ids.empty?
 
   articles_ids.each do |article_id|
     deliver_article article_id
@@ -46,7 +41,6 @@ def process_articles
 end
 
 def try_to_login
-  @logger.info "Trying to login"
   login_page = @agent.get readability_url
   login_page.form.username = @config["readability"]["username"]
   login_page.form.password = @config["readability"]["password"]
@@ -54,7 +48,6 @@ def try_to_login
 end
 
 get '/' do
-  @logger ||= Logger.new('readability-kindle.log')
   @config ||= JSON.parse(File.read(File.join(File.dirname(__FILE__), 'config.json')))
   @agent ||= Mechanize.new
   try_to_login
